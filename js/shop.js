@@ -76,22 +76,50 @@ var total = 0;
 
 // Exercise 1
 function buy(id) {
+  for (const product of products) {
+    if (product.id === id) {
+        let encontradoEnCarrito = false;
+        for (const item of cart) {
+            if (item.id === id) {
+                item.quantity++;
+                encontradoEnCarrito = true;
+                break;
+            }
+        }
+        if (!encontradoEnCarrito) {
+            const producto_copy = {...producto, quantity : 1}
+            cart.push(producto_copy)
+        } break; 
+    }
+
+  }
     // 1. Loop for to the array products to get the item to add to cart
     // 2. Add found product to the cart array
 }
 
 // Exercise 2
 function cleanCart() {
-
+    cart = [];
 }
 
 // Exercise 3
 function calculateTotal() {
+
+    cartList = cart 
+    cartList.reduce ((acc, item) => {
+        return acc + item.price * item.quantity;
+    }, 0);
     // Calculate total price of the cart using the "cartList" array
 }
 
 // Exercise 4
 function applyPromotionsCart() {
+
+    cart.map((item) => {
+        if (item.offer) {
+            item.price = item.price - (item.price * item.offer.percent / 100);
+        }
+    });
     // Apply promotions to each item in the array "cart"
 }
 
