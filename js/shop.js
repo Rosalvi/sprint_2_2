@@ -115,6 +115,11 @@ function calculateTotal() {
 // Exercise 4
 function applyPromotionsCart() {
 
+    cart.map((item) => {
+        if (item.offer && item.quantity >= item.offer.number) {
+            item.price = item.price - (item.price * item.offer.percent / 100);
+        }
+    });
     // Apply promotions to each item in the array "cart"
 }
 
