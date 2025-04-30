@@ -105,14 +105,16 @@ function cleanCart() {
 // Exercise 3
 function calculateTotal() {
 
-    
+    cartList = cart 
+    cartList.reduce ((acc, item) => {
+        return acc + item.price * item.quantity;
+    }, 0);
     // Calculate total price of the cart using the "cartList" array
 }
 
 // Exercise 4
 function applyPromotionsCart() {
 
-    
     // Apply promotions to each item in the array "cart"
 }
 
