@@ -87,28 +87,33 @@ function buy(id) {
             }
         }
         if (!encontradoEnCarrito) {
-            const producto_copy = {...producto, quantity : 1}
+            const producto_copy = {...product, quantity : 1}
             cart.push(producto_copy)
         } break; 
     }
 
   }
+  return cart;
     // 1. Loop for to the array products to get the item to add to cart
     // 2. Add found product to the cart array
 }
 
+
 // Exercise 2
 function cleanCart() {
     cart = [];
+    printCart();
 }
 
 // Exercise 3
 function calculateTotal() {
 
     cartList = cart 
-    cartList.reduce ((acc, item) => {
-        return acc + item.price * item.quantity;
+    total = cartList.reduce ((acc, item) => {
+        return acc + (item.subtotalWithDiscount ? item.subtotalWithDiscount : item.price) * item.quantity;
     }, 0);
+
+     return total;
     // Calculate total price of the cart using the "cartList" array
 }
 
@@ -117,14 +122,35 @@ function applyPromotionsCart() {
 
     cart.map((item) => {
         if (item.offer && item.quantity >= item.offer.number) {
-            item.price = item.price - (item.price * item.offer.percent / 100);
+            item.subtotalWithDiscount = item.price - (item.price * item.offer.percent / 100);
         }
     });
+
+    return cart;
     // Apply promotions to each item in the array "cart"
 }
 
 // Exercise 5
 function printCart() {
+
+    let cart = applyPromotionsCart()
+    const cartList = document.getElementById('cart_list');
+    cartList.innerHTML = '';
+    for (const item of cart) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${item.name}</td>
+            <td>${item.subtotalWithDiscount || item.price}</td>
+            <td>${item.quantity}</td>
+            <td>${item.subtotalWithDiscount ? item.subtotalWithDiscount * item.quantity : item.price * item.quantity}</td>
+        `;
+        cartList.appendChild(tr);
+    }
+
+    const totalPrice = document.getElementById('total_price');
+    totalPrice.innerHTML = calculateTotal();
+
+     
     // Fill the shopping cart modal manipulating the shopping cart dom
 }
 
@@ -139,3 +165,4 @@ function removeFromCart(id) {
 function open_modal() {
     printCart();
 }
+
