@@ -83,12 +83,14 @@ function buy(id) {
             if (item.id === id) {
                 item.quantity++;
                 encontradoEnCarrito = true;
+                calculateTotalItems();
                 break;
             }
         }
         if (!encontradoEnCarrito) {
             const producto_copy = {...product, quantity : 1}
             cart.push(producto_copy)
+            calculateTotalItems();
         } break; 
     }
 
@@ -117,6 +119,15 @@ function calculateTotal() {
     // Calculate total price of the cart using the "cartList" array
 }
 
+function calculateTotalItems() {
+    let totalItems = 0;
+    for (const item of cart) {
+        totalItems += item.quantity;
+    }
+    const count_product = document.getElementById("count_product");
+    count_product.innerHTML = totalItems;
+
+}
 // Exercise 4
 function applyPromotionsCart() {
 
@@ -141,7 +152,8 @@ function printCart() {
         tr.innerHTML = `
             <td>${item.name}</td>
             <td>${item.subtotalWithDiscount || item.price}</td>
-            <td>${item.quantity}</td>
+            <td>${item.quantity} <button onclick="removeFromCart(${item.id})" style="margin-left: 5px; padding: 2px 6px; font-size: 0.8rem;">–</button>
+        </td>
             <td>${item.subtotalWithDiscount ? item.subtotalWithDiscount * item.quantity : item.price * item.quantity}</td>
         `;
         cartList.appendChild(tr);
@@ -159,8 +171,29 @@ function printCart() {
 
 // Exercise 7
 function removeFromCart(id) {
+    for (const product of products) {
+        if (product.id === id) {
+            for (const item of cart) {
+                if (item.id === id) {
+                    item.quantity--;
 
+                    if (item.quantity === 0) {
+                        cart.splice(cart.indexOf(item), 1);
+                    } else if (item.subtotalWithDiscount && item.quantity < item.offer.number) {
+                        item.subtotalWithDiscount = undefined;
+                    }
+                    
+                    printCart();
+                    calculateTotalItems();
+                    break;
+                }
+            }
+        
+        }
 }
+}
+
+
 
 function open_modal() {
     printCart();
